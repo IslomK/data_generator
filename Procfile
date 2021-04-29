@@ -1,2 +1,2 @@
 release: python manage.py migrate
-web: gunicorn plankes.wsgi
+web: gunicorn planeks.wsgi
