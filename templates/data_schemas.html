@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Column Separator</th>
+      <th scope="col">String Character</th>
+      <th scope="col">Created at</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for data_schema in schemas %}
+    <tr>
+      <th scope="row">{{ data_schema.id }}</th>
+      <td>{{ data_schema.name }}</td>
+      <td>{{ data_schema.get_column_separator_display }}</td>
+      <td>{{ data_schema.get_string_character_display }}</td>
+      <td>{{ data_schema.created_at }}</td>
+      <td><a href="{% url 'schema_dataset_create' pk=data_schema.id %}">Generate Dataset</a></td>
+      <td><a href="{% url 'schema_edit' pk=data_schema.id %}">Edit</a></td>
+      <td><a href="{% url 'schema_delete' pk=data_schema.id %}">Delete</a></td>
+
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

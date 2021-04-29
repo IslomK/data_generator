@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block body %}
+<div id="temp">
+
+</div>
+<form method="post" id="schema_field">
+    <div class="col-md-10 mx-auto">
+        {% csrf_token %}
+        {{ schema_form | crispy }}
+    </div>
+    {{ schema_field_form.management_form }}
+    <table class="table" id="formset" border="0" cellpadding="0">
+        <tbody>
+        {% for form in schema_field_form.forms %}
+        {{ form.non_field_errors }}
+        {{ form.errors }}
+        {{ form.id }}
+        <tr>
+            <td>
+                <div class="form-row">
+                    {{ form.name.errors }}
+                    <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                    <input class="form-control" type="text"
+                           value="{% if form.name.value %} {{ form.name.value }} {% endif %}"
+                           name="{{ form.name.html_name }}">
+                </div>
+            </td>
+            <td>
+                <div class="form-row">
+                    <label for="{{ form.field_type.id_for_label }}">{{ form.field_type.label }}</label>
+                    <select name="{{ form.field_type.html_name }}" class="form-control" id="{{ form.field_type.id_for_label }}">
+                        {% for field_type in form.field_type %}
+                            {{ field_type }}
+                        {% endfor %}
+                    </select>
+                    <script>
+                        $('#id_schema_fields-{{ forloop.counter0 }}-field_type').change(function () {
+                            var value = $(this).val();
+
+                            var max_int = $('#max_int_{{ forloop.counter0 }}');
+                            var text_len = $('#text_len_{{ forloop.counter0 }}');
+                            var date_range = $('#date_range_{{ forloop.counter0 }}');
+
+                            if (value === 'integer') {
+                                text_len.css("display", "none");
+                                date_range.css("display", "none")
+                                max_int.css("display", "block");
+                            } else if (value === 'text') {
+                                text_len.css("display", "block")
+                                date_range.css("display", "none")
+                                max_int.css("display", "none")
+                            } else if (value === 'date') {
+                                max_int.css("display", "none")
+                                date_range.css("display", "block")
+                                text_len.css("display", "none")
+                            } else {
+                                max_int.css("display", "none")
+                                date_range.css("display", "none")
+                                text_len.css("display", "none")
+                            }
+                        })
+                    </script>
+                </div>
+            </td>
+            <td>
+                <div id="additional_info">
+                    <div class="form-row" style="display: {% if form.field_type.value == 'integer' %} block {% else %} none {% endif %}"
+                         id="max_int_{{ forloop.counter0 }}">
+                        <label for="{{ form.min_int.id_for_label }}">{{ form.min_int.label }}</label>
+                        <input class="form-control"  type="number" value="{% if form.min_int.value %}{{ form.min_int.value }}{% endif %}" name="{{ form.min_int.html_name }}">
+
+                        <label for="{{ form.max_int.id_for_label }}">{{ form.max_int.label }}</label>
+                        <input class="form-control" type="number" value="{% if form.max_int.value %}{{ form.max_int.value }}{% endif %}" name="{{ form.max_int.html_name }}">
+                    </div>
+
+                    <div class="form-row" style="display: {% if form.field_type.value == 'text' %} block {% else %} none {% endif %}"
+                         id="text_len_{{ forloop.counter0 }}">
+                        <label for="{{ form.text_len.id_for_label }}">{{ form.text_len.label }}</label>
+                        <input class="form-control" type="number" value="{% if form.text_len.value %}{{ form.text_len.value }}{% endif %}" name="{{ form.text_len.html_name }}">
+                    </div>
+
+                    <div style="display: {% if form.field_type.value == 'date' %} block {% else %} none {% endif %}"
+                         id="date_range_{{ forloop.counter0 }}">
+                        <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
+                        <input class="form-control" type="date" value="{% if form.start_date.value %}{{ form.start_date.value|date:'Y-m-d' }}{% endif %}" name="{{ form.start_date.html_name }}">
+                        <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
+                        <input class="form-control" type="date" value="{% if form.end_date.value %}{{ form.end_date.value|date:'Y-m-d' }}{% endif %}" name="{{ form.end_date.html_name }}">
+                    </div>
+                </div>
+            </td>
+            <td>
+                <label for="{{ form.order.id_for_label }}">{{ form.order.label }}</label>
+                <input class="form-control" type="number" value="{% if form.order.value %}{{ form.order.value }}{% endif %}" name="{{ form.order.html_name }}">
+            </td>
+            <td class="delete-button">
+
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        <p>
+            <button type="submit" class="btn btn-primary">
+                Submit
+            </button>
+        </p>
+    </div>
+</form>
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script>
+    $(function () {
+        $('#schema_field tbody tr').formset({
+            prefix: '{{ schema_field_form.prefix }}'
+        });
+    })
+</script>
+{% endblock %}

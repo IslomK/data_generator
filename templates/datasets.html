@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<table class="table">
+  <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Schema</th>
+        <th scope="col">Row number</th>
+        <th scope="col">Created at</th>
+        <th scope="col">Status</th>
+        <th scope="col">Progress</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for dataset in datasets %}
+    <tr>
+      <th scope="row">{{ dataset.dataset_id }}</th>
+      <td>{{ dataset.schema }}</td>
+      <td>{{ dataset.row_number }}</td>
+      <td>{{ dataset.created_at }}</td>
+      <td>{{ dataset.status }}</td>
+      <td>{% if dataset.progress %} {{ dataset.progress }} % {% else %} NDA {% endif %} </td>
+      <td>{% if dataset.path %}<a target="_blank" href="{{ dataset.path }}" download="{{ dataset.path }}">Download</a>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
