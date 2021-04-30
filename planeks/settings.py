@@ -132,7 +132,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # Celery settings
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
+CELERY_BROKER_URL = os.getenv('CLOUDAMQP_URL', REDIS_URL)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_BACKEND = REDIS_URL
 CELERY_TASK_SERIALIZER = 'json'
