@@ -44,14 +44,15 @@ class SchemaCreateView(LoginRequiredMixin, View):
                     schema_fields = []
 
                     for schema_field_form in schema_field_formset:
-                        cd = schema_field_form.cleaned_data
+                        if schema_field_form.has_changed():
+                            cd = schema_field_form.cleaned_data
 
-                        schema_fields.append(SchemaField(
-                            name=cd.get('name'),
-                            field_type=cd.get('field_type'),
-                            order=cd.get('order'),
-                            schema_id=schema.id
-                    ))
+                            schema_fields.append(SchemaField(
+                                name=cd.get('name'),
+                                field_type=cd.get('field_type'),
+                                order=cd.get('order'),
+                                schema_id=schema.id
+                            ))
 
                     SchemaField.objects.bulk_create(schema_fields)
 
