@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'data_generator.CustomUser'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-REDIS_URL = os.getenv('REDISTOGO_URL', 'redis://localhost:6379')
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 # Celery settings
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672/'
