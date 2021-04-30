@@ -15,16 +15,21 @@
         <tbody>
         {% for form in schema_field_form.forms %}
         {{ form.non_field_errors }}
-        {{ form.errors }}
         {{ form.id }}
         <tr>
             <td>
                 <div class="form-row">
-                    {{ form.name.errors }}
                     <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
                     <input class="form-control" type="text"
                            value="{% if form.name.value %} {{ form.name.value }} {% endif %}"
                            name="{{ form.name.html_name }}">
+                    {% if form.name.errors %}
+                        {% for error in form.name.errors %}
+                            <p id="{{ error.id }} " class="text-danger">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </td>
             <td>
@@ -35,6 +40,14 @@
                             {{ field_type }}
                         {% endfor %}
                     </select>
+
+                    {% if form.field_type.errors %}
+                        {% for error in form.field_type.errors %}
+                            <p id="{{ error.id }} " class="text-danger">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    {% endif %}
                     <script>
                         $('#id_schema_fields-{{ forloop.counter0 }}-field_type').change(function () {
                             var value = $(this).val();
@@ -73,12 +86,27 @@
 
                         <label for="{{ form.max_int.id_for_label }}">{{ form.max_int.label }}</label>
                         <input class="form-control" type="number" value="{% if form.max_int.value %}{{ form.max_int.value }}{% endif %}" name="{{ form.max_int.html_name }}">
+
+                        {% if form.max_int.errors %}
+                            {% for error in form.max_int.errors %}
+                                <p id="{{ error.id }} " class="text-danger">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
 
                     <div class="form-row" style="display: {% if form.field_type.value == 'text' %} block {% else %} none {% endif %}"
                          id="text_len_{{ forloop.counter0 }}">
                         <label for="{{ form.text_len.id_for_label }}">{{ form.text_len.label }}</label>
                         <input class="form-control" type="number" value="{% if form.text_len.value %}{{ form.text_len.value }}{% endif %}" name="{{ form.text_len.html_name }}">
+                        {% if form.text_len.errors %}
+                            {% for error in form.text_len.errors %}
+                                <p id="{{ error.id }} " class="text-danger">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
 
                     <div style="display: {% if form.field_type.value == 'date' %} block {% else %} none {% endif %}"
@@ -87,12 +115,27 @@
                         <input class="form-control" type="date" value="{% if form.start_date.value %}{{ form.start_date.value|date:'Y-m-d' }}{% endif %}" name="{{ form.start_date.html_name }}">
                         <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
                         <input class="form-control" type="date" value="{% if form.end_date.value %}{{ form.end_date.value|date:'Y-m-d' }}{% endif %}" name="{{ form.end_date.html_name }}">
+
+                        {% if form.start_date.errors %}
+                            {% for error in form.start_date.errors %}
+                                <p id="{{ error.id }} " class="text-danger">
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </td>
             <td>
                 <label for="{{ form.order.id_for_label }}">{{ form.order.label }}</label>
                 <input class="form-control" type="number" value="{% if form.order.value %}{{ form.order.value }}{% endif %}" name="{{ form.order.html_name }}">
+                {% if form.order.errors %}
+                    {% for error in form.order.errors %}
+                        <p id="{{ error.id }} " class="text-danger">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                {% endif %}
             </td>
             <td class="delete-button">
 

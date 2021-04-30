@@ -4,7 +4,7 @@ from django.db import DatabaseError, transaction, IntegrityError
 from django.shortcuts import render, redirect
 from django.views import View
 
-from data_generator.forms import SchemaForm, SchemaFieldFormSet, DatasetForm
+from data_generator.forms import SchemaForm, SchemaFieldFormset, DatasetForm
 from data_generator.models import Schema, SchemaField
 
 
@@ -24,7 +24,7 @@ class SchemaListView(LoginRequiredMixin, View):
 
 class SchemaCreateView(LoginRequiredMixin, View):
     form = SchemaForm
-    formset = SchemaFieldFormSet
+    formset = SchemaFieldFormset
     template_name = 'edit_schema.html'
     login_url = 'login'
 
@@ -81,7 +81,7 @@ class SchemaDeleteView(LoginRequiredMixin, View):
 
 class SchemaEditView(LoginRequiredMixin, View):
     form = SchemaForm
-    formset = SchemaFieldFormSet
+    formset = SchemaFieldFormset
     template_name = 'edit_schema.html'
     login_url = 'login'
 
