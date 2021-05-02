@@ -1,4 +1,9 @@
+import csv
 import logging
+import tempfile
+
+import boto3
+
 from celery.result import AsyncResult
 from celery.exceptions import CeleryError
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,7 +15,8 @@ from django.views import View
 from data_generator.forms import DatasetForm
 from data_generator.models.schema import Dataset
 from data_generator.tasks import generate_data
-
+from planeks import settings
+from planeks.storages import PublicMediaStorage
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +37,6 @@ class DatasetEditView(LoginRequiredMixin, View):
         if form.is_valid():
             schema = form.cleaned_data.get('schema')
             row_number = form.cleaned_data.get('row_number')
-
-            # starting the generate dataset task
 
             try:
                 logger.info(

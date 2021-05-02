@@ -2,16 +2,20 @@ from __future__ import absolute_import, unicode_literals
 
 import csv
 import logging
+import tempfile
 
 from celery import Task
 from django.db import DatabaseError
 from django.utils import timezone
+from django.core.files.storage import DefaultStorage
 from faker import Faker
 
 from data_generator.models import Schema, SchemaField
 from data_generator.models.schema import Dataset
-from planeks import settings
 from planeks.celery import app
+from storages.backends.s3boto3 import S3Boto3Storage
+
+from planeks.storages import PublicMediaStorage
 
 logger = logging.getLogger(__name__)
 
@@ -65,21 +69,28 @@ def generate_data(self: Task, schema_id, row_number):
             get_fake_type(schema_field.field_type): arguments
         })
 
-    filename = f'{schema.name}_{dataset.id}_{dataset.row_number}.csv'
-    with open(settings.MEDIA_ROOT + filename, 'w') as csv_file:
-        writer = csv.writer(csv_file, delimiter=schema.column_separator, quotechar=schema.string_character,
-                            quoting=csv.QUOTE_NONNUMERIC)
-        writer.writerow(headers)
+    media_storage = DefaultStorage()
 
-        for i in range(0, row_number):
-            self.update_state(state='IN PROGRESS', meta={"progress": round((i/row_number) * 100)})
-            writer.writerow([method(**arguments) for method, arguments in methods.items()])
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        with open(temp_file.name, 'w') as csv_file:
+            writer = csv.writer(csv_file, delimiter=schema.column_separator, quotechar=schema.string_character,
+                                quoting=csv.QUOTE_NONNUMERIC)
+            writer.writerow(headers)
 
-    self.update_state(state='FINISHED', meta={"progress": 100})
+            for i in range(0, row_number):
+                self.update_state(state='IN PROGRESS', meta={"progress": round((i/row_number) * 100)})
+                writer.writerow([method(**arguments) for method, arguments in methods.items()])
+
+            csv_file.close()
+
+        filename = f'{schema.id}_{dataset.id}_{row_number}".csv'
+        media_storage.save(filename, temp_file)
+        dataset.path = media_storage.url(filename)
 
     dataset.finished_at = timezone.now()
-    dataset.path = settings.MEDIA_URL + filename
     dataset.save()
+
+    self.update_state(state='FINISHED', meta={"progress": 100})
 
 
 def get_fake_type(field_type):
