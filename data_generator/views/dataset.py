@@ -75,9 +75,12 @@ class DatasetListView(LoginRequiredMixin, View):
             }
             if dataset.task_id:
                 result = AsyncResult(dataset.task_id)
+                progress = None
+                if result.info and result.status != 'FAILURE':
+                    progress = result.info.get('progress')
 
                 task.update({
-                    "progress": result.info.get('progress') if result.info else None,
+                    "progress": progress,
                     "status": result.status
                 })
 

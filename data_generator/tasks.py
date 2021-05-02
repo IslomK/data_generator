@@ -106,6 +106,7 @@ def get_fake_type(field_type):
         SchemaField.COMPANY_NAME: fake.company,
         SchemaField.DOMAIN_NAME: fake.domain_name,
         SchemaField.EMAIL: fake.ascii_email,
+        SchemaField.FULL_NAME: fake.name
     }
 
     return fake_types.get(field_type)
