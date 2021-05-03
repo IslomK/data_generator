@@ -5,6 +5,7 @@
 <div id="temp">
 
 </div>
+
 <form method="post" id="schema_field">
     <div class="col-md-10 mx-auto">
         {% csrf_token %}
@@ -48,39 +49,12 @@
                             </p>
                         {% endfor %}
                     {% endif %}
-                    <script>
-                        $('#id_schema_fields-{{ forloop.counter0 }}-field_type').change(function () {
-                            var value = $(this).val();
-
-                            var max_int = $('#max_int_{{ forloop.counter0 }}');
-                            var text_len = $('#text_len_{{ forloop.counter0 }}');
-                            var date_range = $('#date_range_{{ forloop.counter0 }}');
-
-                            if (value === 'integer') {
-                                text_len.css("display", "none");
-                                date_range.css("display", "none")
-                                max_int.css("display", "block");
-                            } else if (value === 'text') {
-                                text_len.css("display", "block")
-                                date_range.css("display", "none")
-                                max_int.css("display", "none")
-                            } else if (value === 'date') {
-                                max_int.css("display", "none")
-                                date_range.css("display", "block")
-                                text_len.css("display", "none")
-                            } else {
-                                max_int.css("display", "none")
-                                date_range.css("display", "none")
-                                text_len.css("display", "none")
-                            }
-                        })
-                    </script>
                 </div>
             </td>
             <td>
                 <div id="additional_info">
-                    <div class="form-row" style="display: {% if form.field_type.value == 'integer' %} block {% else %} none {% endif %}"
-                         id="max_int_{{ forloop.counter0 }}">
+                    <div class="form-row max-int" style="display: {% if form.field_type.value == 'integer' %} block {% else %} none {% endif %}"
+                         id="{{ form.max_int.id_for_label }}">
                         <label for="{{ form.min_int.id_for_label }}">{{ form.min_int.label }}</label>
                         <input class="form-control"  type="number" value="{% if form.min_int.value %}{{ form.min_int.value }}{% endif %}" name="{{ form.min_int.html_name }}">
 
@@ -96,8 +70,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="form-row" style="display: {% if form.field_type.value == 'text' %} block {% else %} none {% endif %}"
-                         id="text_len_{{ forloop.counter0 }}">
+                    <div class="form-row text-len" style="display: {% if form.field_type.value == 'text' %} block {% else %} none {% endif %}"
+                         id="{{ form.text_len.id_for_label }}">
                         <label for="{{ form.text_len.id_for_label }}">{{ form.text_len.label }}</label>
                         <input class="form-control" type="number" value="{% if form.text_len.value %}{{ form.text_len.value }}{% endif %}" name="{{ form.text_len.html_name }}">
                         {% if form.text_len.errors %}
@@ -109,8 +83,8 @@
                         {% endif %}
                     </div>
 
-                    <div style="display: {% if form.field_type.value == 'date' %} block {% else %} none {% endif %}"
-                         id="date_range_{{ forloop.counter0 }}">
+                    <div class="form-row date_range" style="display: {% if form.field_type.value == 'date' %} block {% else %} none {% endif %}"
+                         id="{{ form.start_date.id_for_label }}">
                         <label for="{{ form.start_date.id_for_label }}">{{ form.start_date.label }}</label>
                         <input class="form-control" type="date" value="{% if form.start_date.value %}{{ form.start_date.value|date:'Y-m-d' }}{% endif %}" name="{{ form.start_date.html_name }}">
                         <label for="{{ form.end_date.id_for_label }}">{{ form.end_date.label }}</label>
