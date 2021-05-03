@@ -26,7 +26,7 @@ class SchemaFieldForm(forms.ModelForm):
         field_type = cd.get('field_type')
 
         if field_type == SchemaField.INTEGER:
-            if not all(cd.get("max_int") and ("min_int")):
+            if not bool(cd.get("max_int") and ("min_int")):
                 self.add_error("max_int", "Minimum and maximum for integers are required")
 
         if field_type == SchemaField.TEXT:

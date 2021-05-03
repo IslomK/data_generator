@@ -5,8 +5,8 @@ $((setInterval(function () {
             var value = $(this).val();
 
             var max_int = $(this).closest('tr').find(".max-int");
-            var text_len = $(this).closest('tr').find(".text_len");
-            var date_range = $(this).closest('tr').find(".date_between");
+            var text_len = $(this).closest('tr').find(".text-len");
+            var date_range = $(this).closest('tr').find(".date_range");
 
             if (value === 'integer') {
                 text_len.css("display", "none");
