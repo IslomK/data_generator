@@ -38,7 +38,8 @@ class SchemaCreateView(LoginRequiredMixin, View):
         if schema_form.is_valid() and schema_field_formset.is_valid():
             try:
                 with transaction.atomic():
-                    schema_form.save()
+                    schema = Schema.objects.create(**schema_form.cleaned_data)
+                    schema_field_formset.instance = schema
                     schema_field_formset.save()
             except (IntegrityError, DatabaseError) as ex:  # If the transaction failed
                 messages.error(request, 'There was an error saving your schema.')
