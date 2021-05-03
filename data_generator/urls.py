@@ -6,7 +6,7 @@ from django.contrib.auth import logout
 urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('logout/', views.Logout.as_view(), name='logout'),
-    path('/', views.SchemaListView.as_view(), name='schemas'),
+    path('', views.SchemaListView.as_view(), name='schemas'),
     path('schemas/', views.SchemaListView.as_view(), name='schemas'),
     path('datasets/', views.DatasetListView.as_view(), name='datasets'),
     path('datasets/add/', views.DatasetEditView.as_view(), name='dataset_create'),
